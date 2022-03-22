@@ -7,67 +7,107 @@
       icon="left-circle"
       >返回</a-button
     >
-    <BooksList :booksData="booksData" :readAble="readAble" @bookReader='bookReader'></BooksList>
+
+    <a-button icon="upload" @click="inputBtn">导入漫画</a-button>
+    <input
+      type="file"
+      multiple="true"
+      style="display: none"
+      ref="intf"
+      @change="inputCmoic"
+    />
+
+    <BooksList
+      :booksData="booksData"
+      :readAble="readAble"
+      @bookReader="bookReader"
+    ></BooksList>
   </div>
 </template>
 
 <script>
 import BooksList from "./BooksList.vue";
+const { compress, decompress } = require("shrink-string");
 const fs = require("fs");
 const EPub = require("epub");
 export default {
   name: "read-books",
   data() {
     return {
-      booksData:[],
-      readAble: true
+      booksData: [],
+      readAble: true,
+      headers: {
+        authorization: "authorization-text",
+      },
     };
   },
-  methods:{
-    bookReader(book){
+  methods: {
+    bookReader(book) {
       this.$router.push({
-        name: 'bookReader',
-        //params和path不能一起使用，这里用query
-        params:{
-          book
-        }
-      })
-    }
-  },
-  mounted() {
-    this.isLoading = true;
-    let files = fs.readdirSync("Library");
-    let tempData = [];
-    let p = new Promise((resolve) => {
-      files.forEach((file) => {
-        let book = new EPub("Library/" + file);
-        let data = {
-          title: "",
-          cover: "",
-          author: "",
-          book:book
-        };
+        name: "bookReader",
+        //params和path不能一起使用，这里用name
+        params: {
+          book,
+        },
+      });
+    },
+    getEPuB(file) {
+      let path = file.path;
+      let book = new EPub(path);
+      book.parse();
+      let temp = {
+        id: file.lastModified,
+        fileName: file.name,
+        title: "",
+        author: "",
+        cover: "",
+        path: "",
+      };
+      return new Promise((resolve) => {
         book.on("end", () => {
-          data.title = book.metadata.title;
-          data.author = book.metadata.creator;
+          temp.path = book.filename;
+          temp.title = book.metadata.title;
+          temp.author = book.metadata.creator;
           book.getImage("cover-image", (err, img, type) => {
             if (err) {
               throw err;
             }
-            data.cover = `data:${type};base64,${img.toString("base64")}`;
-            data.book.cover = data.cover;
-            tempData.push(data);
+            temp.cover = `data:${type};base64,${img.toString("base64")}`;
+            resolve(temp);
           });
         });
-        book.parse();
       });
-      resolve(tempData);
-    });
-    p.then((tempData) => {
-      this.booksData = tempData;
+    },
+    inputBtn() {
+      this.$refs.intf.click();
+    },
+    async inputCmoic(e) {
+      let files = Array.from(e.target.files);
+      for (let item in files) {
+        await this.getEPuB(files[item]).then((temp) => {
+          this.booksData.push(temp);
+        });
+      }
+      //保存数据
+      let saveData = JSON.stringify(this.booksData);
+      let ws = fs.createWriteStream("temp_data/data.ele");
+      let shrunk = await compress(saveData);
+      ws.write(shrunk);
+      ws.end();
+    },
+  },
+  mounted() {
+    new Promise(function(resolve) {
+      fs.readFile("temp_data/data.ele", function(err,data) {
+        if (err) return;
+        resolve(data);
+      });
+    }).then(async (data) => {
+      let loadData = await decompress(data.toString());
+      this.booksData = JSON.parse(loadData)
     });
   },
-  components: { BooksList},
+  components: { BooksList },
 };
 </script>
 

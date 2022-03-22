@@ -9,7 +9,10 @@
       >返回</a-button
     >
     <div id="display-area">
-      <div id="contents" v-html="content"></div>
+      <a-spin id='loading' size='large' v-show='content===""' />
+      <div id="contents" v-html="content">
+        
+      </div>
       <div id="index">
         <template v-for="(item, i) in book.flow">
           <a-menu
@@ -30,34 +33,46 @@
 </template>
 
 <script>
+const EPub = require("epub");
 export default {
   name: "book-reader",
   mounted() {
+    document.documentElement.scrollTop = 0;
     this.count = 0;
-    this.book = this.$route.params.book;
-    this.content = `<img style="width:100%;max-width:720px;" src="${this.book.cover}"/>`;
-    let j = 0;
-    for (let key in this.book.manifest) {
-      if (this.book.manifest[key]["media-type"].search(/image/) !== -1) {
-        this.images[j] = this.book.manifest[key].id;
-        j++;
+    this.book = new EPub(this.$route.params.book);
+    this.book.on("end", () => {
+      this.book.getImage("cover-image", (err, img, type) => {
+        if (err) {
+          throw err;
+        }
+        this.cover = `data:${type};base64,${img.toString("base64")}`;
+        this.content = `<img style="width:100%;max-width:720px;" src="${this.cover}"/>`;
+      });
+      let j = 0;
+      for (let key in this.book.manifest) {
+        if (this.book.manifest[key]["media-type"].search(/image/) !== -1) {
+          this.images[j] = this.book.manifest[key].id;
+          j++;
+        }
       }
-    }
-    this.book.getFile("css", (err, data) => {
-      if (err) {
-        return;
-      }
-      this.css = `<style>${data.toString()}</style>`;
+      this.book.getFile("css", (err, data) => {
+        if (err) {
+          return;
+        }
+        this.css = `<style>${data.toString()}</style>`;
+      });
     });
+    this.book.parse();
   },
   data() {
     return {
+      cover:"",
       content: "",
       book: {},
       images: [],
       chapters: [],
       count: 0,
-      css:''
+      css: "",
     };
   },
   methods: {
@@ -81,10 +96,10 @@ export default {
       return item.title;
     },
     async toggle(item, i) {
-      document.documentElement.scrollTop  = 0;     
+      document.documentElement.scrollTop = 0;
       this.content = "";
       if (item.title.search(/(C|c)over/) !== -1) {
-        this.content = `<img style="width:100%;max-width:720px;" src="${this.book.cover}"/>`;
+        this.content = `<img style="width:100%;max-width:720px;" src="${this.cover}"/>`;
       } else if (item.id === "s1") {
         this.book.getChapter("s1", (err, text) => {
           if (err) throw err;
@@ -140,7 +155,10 @@ export default {
 #display-area {
   display: grid;
   grid-template-columns: 1fr 150px;
-  justify-items:center;
+  justify-items: center;
+}
+#loading{
+  margin-top:50%;
 }
 #index {
   position: fixed;
@@ -157,7 +175,7 @@ export default {
   vertical-align: sub;
   width: 100%;
   max-width: 720px;
-  text-align: center;  
+  text-align: center;
 }
 
 #contents img {
