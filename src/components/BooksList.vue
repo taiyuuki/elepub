@@ -1,12 +1,17 @@
 <template>
+<div>
   <a-table :columns="columns" :data-source="booksData" rowKey="id" size='small'>
     <img slot="cover" slot-scope="cover" :src="cover" width="200"/>
     <span slot="customTitle"><a-icon type="smile-o" /> Name</span>
     <span slot="path" slot-scope="path">
-      <a-button type="primary" :disabled="!readAble" @click='open(path)'>阅读</a-button>
+      <a-button type="primary" :disabled="!readAble" @click='open(path)'>阅读</a-button><br/><br/>
+      <a-button type="danger" :disabled="!readAble" @click='remove(path)'>移除</a-button>
     </span>
   </a-table>
+</div>
+
 </template>
+
 
 <script>
 const columns = [
@@ -48,6 +53,9 @@ export default {
   methods:{
     open(book){
       this.$emit('bookReader',book)
+    },
+    remove(path){
+      this.$emit('remove',path);
     }
   }
 };

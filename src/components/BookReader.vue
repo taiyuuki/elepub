@@ -19,9 +19,9 @@
             v-if="item.title && subSection(item, i)"
             mode="inline"
             style="width: 150px"
-            :key="item.title + i"
+            :key="item.title + i"           
           >
-            <a-menu-item :key="i" @click="toggle(item, i)">
+            <a-menu-item :key="i" @click="toggle(item, i)" :disabled="useable">
               <span><a-icon type="flag" /></span>
               <span>{{ item.title }}</span>
             </a-menu-item>
@@ -73,6 +73,7 @@ export default {
       chapters: [],
       count: 0,
       css: "",
+      useable:false
     };
   },
   methods: {
@@ -96,6 +97,7 @@ export default {
       return item.title;
     },
     async toggle(item, i) {
+      this.useable = true;
       document.documentElement.scrollTop = 0;
       this.content = "";
       if (item.title.search(/(C|c)over/) !== -1) {
@@ -123,6 +125,7 @@ export default {
           });
         }
       }
+      this.useable = false;
     },
     getImages(id) {
       return new Promise((resolve) => {
@@ -158,7 +161,7 @@ export default {
   justify-items: center;
 }
 #loading{
-  margin-top:50%;
+  margin-top:30%;
 }
 #index {
   position: fixed;

@@ -9,18 +9,25 @@
     >
 
     <a-button icon="upload" @click="inputBtn">导入漫画</a-button>
+
+    <a-button class='creator-btn' type="primary" icon="tool" @click="$router.push('/BookCreator')">制作EPUB</a-button>
+
     <input
       type="file"
       multiple="true"
       style="display: none"
       ref="intf"
       @change="inputCmoic"
+      accept=".epub"
     />
-
+    <div class="spin-content" v-if="isLoading">
+      <a-spin class="load-item" tip="Loading..."> </a-spin>
+    </div>
     <BooksList
       :booksData="booksData"
       :readAble="readAble"
       @bookReader="bookReader"
+      @remove="remove"
     ></BooksList>
   </div>
 </template>
@@ -39,6 +46,7 @@ export default {
       headers: {
         authorization: "authorization-text",
       },
+      isLoading: false,
     };
   },
   methods: {
@@ -50,6 +58,18 @@ export default {
           book,
         },
       });
+    },
+    async remove(path) {
+      let j = 0;
+      while (this.booksData[j].path !== path) {
+        j++;
+      }
+      this.booksData.splice(j, 1);
+      let saveData = JSON.stringify(this.booksData);
+      let ws = fs.createWriteStream("temp_data/data.ele");
+      let shrunk = await compress(saveData);
+      ws.write(shrunk);
+      ws.end();
     },
     getEPuB(file) {
       let path = file.path;
@@ -82,10 +102,14 @@ export default {
       this.$refs.intf.click();
     },
     async inputCmoic(e) {
+      this.isLoading = true;
       let files = Array.from(e.target.files);
-      for (let item in files) {
-        await this.getEPuB(files[item]).then((temp) => {
-          this.booksData.push(temp);
+      for (let i in files) {
+        if (files[i].path.search(/.epub$/g)===-1 || this.booksData.some((j) => j.path === files[i].path)) {
+          continue;
+        }
+        await this.getEPuB(files[i]).then((temp) => {
+          this.booksData.unshift(temp);
         });
       }
       //保存数据
@@ -94,17 +118,20 @@ export default {
       let shrunk = await compress(saveData);
       ws.write(shrunk);
       ws.end();
+      this.isLoading = false;
     },
   },
   mounted() {
-    new Promise(function(resolve) {
-      fs.readFile("temp_data/data.ele", function(err,data) {
+    this.isLoading = true;
+    new Promise(function (resolve) {
+      fs.readFile("temp_data/data.ele", function (err, data) {
         if (err) return;
         resolve(data);
       });
     }).then(async (data) => {
       let loadData = await decompress(data.toString());
-      this.booksData = JSON.parse(loadData)
+      this.booksData = JSON.parse(loadData);
+      this.isLoading = false;
     });
   },
   components: { BooksList },
@@ -119,5 +146,22 @@ export default {
 }
 .return-back {
   margin: 0 30px 30px 3px;
+}
+.spin-content {
+  text-align: center;
+  border: 1px solid #91d5ff;
+  background-color: rgba(230, 247, 255, 0.5);
+  width: 100%;
+  height: 1000%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+.load-item {
+  margin-top: 30%;
+}
+.creator-btn{
+  margin-left:30px;
 }
 </style>

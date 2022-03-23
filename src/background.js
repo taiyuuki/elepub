@@ -14,7 +14,7 @@ async function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1000,
-    height: 620,
+    height: 820,
     webPreferences: {
 
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -35,7 +35,7 @@ async function createWindow () {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
-  // createMenu();
+  createMenu();
 }
 
 // Quit when all windows are closed.

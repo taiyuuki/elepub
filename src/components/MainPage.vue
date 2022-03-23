@@ -2,7 +2,7 @@
   <div class="main">
     <div class="search">
       <a-input-search
-        placeholder="输入搜索内容"
+        placeholder="在线搜索"
         enter-button
         @search="onSearch"
         v-model="keyword"

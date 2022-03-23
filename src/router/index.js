@@ -19,6 +19,11 @@ const routes = [{
     component: require('@/components/BookReader').default
   },
   {
+    path: '/bookCreator',
+    name: 'bookCreator',
+    component: require('@/components/BookCreator').default
+  },
+  {
     path: '*',
     redirect: '/'
   }
