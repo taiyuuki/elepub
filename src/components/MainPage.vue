@@ -3,7 +3,7 @@
     <div class="search">
           <a-tooltip>
       <template slot="title">
-        这个功能目前只是个摆设</template
+        这个目前只是个摆设</template
       >
             <a-input-search
         placeholder="在线搜索"

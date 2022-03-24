@@ -1,4 +1,6 @@
-const { defineConfig } = require('@vue/cli-service')
+const {
+  defineConfig
+} = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true
 })
@@ -23,6 +25,21 @@ module.exports = {
       .set('common', resolve('src/common'))
       .set('components', resolve('src/components'));
   },
+  pluginOptions: {
+    electronBuilder: {
+      //设置应用图片
+      builderOptions: {
+        win: {
+          icon: './src/assets/logo.png'
+        },
+        mac: {
+          icon: './src/assets/logo.png'
+        },
+        //设置App名称
+        productName: 'elepub'
+      }
+    }
+  },
   configureWebpack: {
     resolve: {
       // 如果确认需要node polyfill，设置resolve.fallback安装对应的依赖
@@ -40,8 +57,8 @@ module.exports = {
         crypto: false
       }
     },
-    externals:{
-      'electron':'require("electron")'
+    externals: {
+      'electron': 'require("electron")'
     },
     target: "electron-renderer"
   }

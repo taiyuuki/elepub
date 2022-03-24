@@ -9,7 +9,7 @@
     >
     <a-tooltip>
       <template slot="title">
-        这个模块只支持由本软件生成的漫画，用于测试生成效果，导入其他EPUB可能会发生错误。</template
+        只支持由本工具生成的漫画，用于测试生成效果，导入其他EPUB会发生错误。</template
       >
       <a-button icon="upload" @click="inputBtn">导入漫画</a-button>
     </a-tooltip>

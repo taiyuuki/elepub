@@ -13,7 +13,7 @@
     <div id="panel">
       <div id="holder">
         <a-tooltip>
-          <template slot="title"> 导入漫画图片</template>
+          <template slot="title"> 导入漫画图片，请一定要事先排好顺序</template>
           <a-button icon="upload" @click="inputImagesBtn">导入图片</a-button>
         </a-tooltip>
 
@@ -33,12 +33,12 @@
 
         <a-tooltip>
           <template slot="title"
-            >给每一话第一张图名称一个标记，生成epub时会匹配标记自动分章，留空则每一页一章，未匹配则不分章。</template
+            >标记每话的第一张图，比如在文件名后添加“_C”，epub会在标记处自动分章，默认（留空）每一页就是一章。</template
           >
           <a-input
             id="regx"
-            placeholder="第一页标记"
-            size="small"
+            placeholder="输入你设置的标记"
+            size="middle"
             v-model="firstPage"
           />
         </a-tooltip>
@@ -67,7 +67,7 @@
         </div>
         <div id="meta">
           <a-tooltip>
-            <template slot="title"> 书名，必填</template>
+            <template slot="title">书名 必填</template>
             <a-input placeholder="书名" v-model="metadata.title" />
           </a-tooltip>
 
@@ -172,7 +172,7 @@ export default {
       ) {
         this.ModalText = "封面、书名、作者不能为空";
       } else {
-        this.ModalText = "即将生成EPuB格式的多看漫画（条漫式），是否继续？";
+        this.ModalText = "将生成EPuB格式的多看漫画（条漫），是否继续？";
       }
     },
     handleCancel() {
