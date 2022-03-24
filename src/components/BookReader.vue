@@ -9,17 +9,15 @@
       >返回</a-button
     >
     <div id="display-area">
-      <a-spin id='loading' size='large' v-show='content===""' />
-      <div id="contents" v-html="content">
-        
-      </div>
+      <a-spin id="loading" size="large" v-show="content === ''" />
+      <div id="contents" v-html="content"></div>
       <div id="index">
         <template v-for="(item, i) in book.flow">
           <a-menu
             v-if="item.title && subSection(item, i)"
             mode="inline"
             style="width: 150px"
-            :key="item.title + i"           
+            :key="item.title + i"
           >
             <a-menu-item :key="i" @click="toggle(item, i)" :disabled="useable">
               <span><a-icon type="flag" /></span>
@@ -62,18 +60,27 @@ export default {
         this.css = `<style>${data.toString()}</style>`;
       });
     });
-    this.book.parse();
+    try {
+      this.book.parse()
+    } catch {
+      this.$notification.open({
+        message: "打开失败",
+        description: `文件已经被移除或文件路径被更改`,
+        icon: <a-icon type="warning" style="color: #108ee9" />,
+      })
+      this.content='打开失败'
+    }
   },
   data() {
     return {
-      cover:"",
+      cover: "",
       content: "",
       book: {},
       images: [],
       chapters: [],
       count: 0,
       css: "",
-      useable:false
+      useable: false,
     };
   },
   methods: {
@@ -160,8 +167,8 @@ export default {
   grid-template-columns: 1fr 150px;
   justify-items: center;
 }
-#loading{
-  margin-top:30%;
+#loading {
+  margin-top: 30%;
 }
 #index {
   position: fixed;

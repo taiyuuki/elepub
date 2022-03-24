@@ -6,14 +6,14 @@
     <a-button
       class="return-back"
       type="primary"
-      @click="$router.push('/books')"
+      @click="$router.push(returnRouter)"
       icon="left-circle"
       >返回</a-button
     >
     <div id="panel">
       <div id="holder">
         <a-tooltip>
-          <template slot="title"> 请导入漫画图片</template>
+          <template slot="title"> 导入漫画图片</template>
           <a-button icon="upload" @click="inputImagesBtn">导入图片</a-button>
         </a-tooltip>
 
@@ -33,11 +33,11 @@
 
         <a-tooltip>
           <template slot="title"
-            >请给每话第一张图的文件名添加一个特有而统一的标记（支持正则），epub会根据标记自动分章，留空将为每一页划为一章。</template
+            >给每一话第一张图名称一个标记，生成epub时会匹配标记自动分章，留空则每一页一章，未匹配则不分章。</template
           >
           <a-input
             id="regx"
-            placeholder="设置标记"
+            placeholder="第一页标记"
             size="small"
             v-model="firstPage"
           />
@@ -134,6 +134,7 @@ export default {
         img: "",
         path: "",
       },
+      returnRouter:'/',
       visible: false,
       confirmLoading: false,
       comicPreview: [],
@@ -158,6 +159,9 @@ export default {
       },
     };
   },
+  mounted(){
+    this.returnRouter = this.$route.params.rt;
+  },
   methods: {
     showModal() {
       this.visible = true;
@@ -166,9 +170,9 @@ export default {
         this.metadata.title === "" ||
         this.metadata.author === ""
       ) {
-        this.ModalText = "封面、标题、作者不能为空";
+        this.ModalText = "封面、书名、作者不能为空";
       } else {
-        this.ModalText = "即将生成EPuB格式的多看滚动漫画，是否继续？";
+        this.ModalText = "即将生成EPuB格式的多看漫画（条漫式），是否继续？";
       }
     },
     handleCancel() {
@@ -264,14 +268,19 @@ export default {
       epub.addSection("说明", msgTemplate, false, false, "msg");
       await this.getHtmlSection();
       if (this.metadata.sequence === "") {
-        await epub.writeEPUB("output", `[多看漫画]${this.metadata.title}`);
+        await epub.writeEPUB("./EPUB", `[多看漫画]${this.metadata.title}`);
       } else {
         await epub.writeEPUB(
-          "output",
+          "./EPUB",
           `[多看漫画]${this.metadata.title} ${this.metadata.sequence}`
         );
       }
       this.isCreating = false;
+      this.$notification.open({
+        message: '已完成',
+        description:`生成的文件放在根目录EPUB文件夹内`,
+        icon: <a-icon type="message" style="color: #108ee9" />,       
+      });
     },
     createEPuB() {
       this.visible = false;

@@ -1,18 +1,32 @@
 <template>
   <div class="main">
     <div class="search">
-      <a-input-search
+          <a-tooltip>
+      <template slot="title">
+        这个功能目前只是个摆设</template
+      >
+            <a-input-search
         placeholder="在线搜索"
         enter-button
         @search="onSearch"
         v-model="keyword"
         class="input"
       />
+    </a-tooltip>
+
       <div>
         <a-button type="primary" @click="$router.push('/books')" icon="database"
           >本地书籍</a-button
         >
       </div>
+      <a-button
+        class="creator-btn"
+        type="primary"
+        icon="tool"
+        @click="toggleToCreatePage"
+        >制作EPUB</a-button
+      >
+      <div></div>
     </div>
     <BooksList :booksData="booksData" :readAble="readAble" />
   </div>
@@ -51,8 +65,16 @@ export default {
         this.booksData = [...data];
       });
     },
+    toggleToCreatePage(){
+      this.$router.push({
+        name: "bookCreator",
+        params: {
+          rt: '/'
+        }
+      })
+    }
   },
-  components: { BooksList},
+  components: { BooksList },
 };
 </script>
 
@@ -62,12 +84,16 @@ export default {
 }
 .search {
   margin: 0 auto 30px auto;
-  width: 400px;
+  width: 600px;
   display: flex;
   justify-content: space-around;
 }
 
 .input {
-  margin: 0 5px;
+  margin: 0 30px;
+}
+
+.creator-btn{
+  margin-left:30px;
 }
 </style>

@@ -12,6 +12,20 @@
     "postuninstall": "electron-builder install-app-deps"
   },
   "main": "background.js",
+  "author": "taiyuuki",
+  "description": "一个用于制作多看滚动漫画（条漫）的工具",
+  "development": {
+    "productName": "多看漫画制作",
+    "mac": {
+      "icon" : "public/favicon.ico"
+    },
+    "win": {
+      "icon": "public/favicon.ico"
+    },
+    "linux": {
+      "icon": "public/favicon.ico"
+    }
+  },
   "dependencies": {
     "ant-design-vue": "^1.7.8",
     "axios": "^0.26.1",

@@ -7,10 +7,20 @@
       icon="left-circle"
       >返回</a-button
     >
+    <a-tooltip>
+      <template slot="title">
+        这个模块只支持由本软件生成的漫画，用于测试生成效果，导入其他EPUB可能会发生错误。</template
+      >
+      <a-button icon="upload" @click="inputBtn">导入漫画</a-button>
+    </a-tooltip>
 
-    <a-button icon="upload" @click="inputBtn">导入漫画</a-button>
-
-    <a-button class='creator-btn' type="primary" icon="tool" @click="$router.push('/BookCreator')">制作EPUB</a-button>
+    <a-button
+      class="creator-btn"
+      type="primary"
+      icon="tool"
+      @click="toggleToCreatePage"
+      >制作EPUB</a-button
+    >
 
     <input
       type="file"
@@ -59,6 +69,14 @@ export default {
         },
       });
     },
+    toggleToCreatePage() {
+      this.$router.push({
+        name: "bookCreator",
+        params: {
+          rt: "/books",
+        },
+      });
+    },
     async remove(path) {
       let j = 0;
       while (this.booksData[j].path !== path) {
@@ -66,7 +84,7 @@ export default {
       }
       this.booksData.splice(j, 1);
       let saveData = JSON.stringify(this.booksData);
-      let ws = fs.createWriteStream("temp_data/data.ele");
+      let ws = fs.createWriteStream("./data.ele");
       let shrunk = await compress(saveData);
       ws.write(shrunk);
       ws.end();
@@ -83,14 +101,14 @@ export default {
         cover: "",
         path: "",
       };
-      return new Promise((resolve) => {
+      return new Promise((resolve,reject) => {
         book.on("end", () => {
           temp.path = book.filename;
           temp.title = book.metadata.title;
           temp.author = book.metadata.creator;
           book.getImage("cover-image", (err, img, type) => {
             if (err) {
-              throw err;
+              reject(err);
             }
             temp.cover = `data:${type};base64,${img.toString("base64")}`;
             resolve(temp);
@@ -105,7 +123,10 @@ export default {
       this.isLoading = true;
       let files = Array.from(e.target.files);
       for (let i in files) {
-        if (files[i].path.search(/.epub$/g)===-1 || this.booksData.some((j) => j.path === files[i].path)) {
+        if (
+          files[i].path.search(/.epub$/g) === -1 ||
+          this.booksData.some((j) => j.path === files[i].path)
+        ) {
           continue;
         }
         await this.getEPuB(files[i]).then((temp) => {
@@ -114,7 +135,7 @@ export default {
       }
       //保存数据
       let saveData = JSON.stringify(this.booksData);
-      let ws = fs.createWriteStream("temp_data/data.ele");
+      let ws = fs.createWriteStream("./data.ele");
       let shrunk = await compress(saveData);
       ws.write(shrunk);
       ws.end();
@@ -123,16 +144,24 @@ export default {
   },
   mounted() {
     this.isLoading = true;
-    new Promise(function (resolve) {
-      fs.readFile("temp_data/data.ele", function (err, data) {
-        if (err) return;
+    new Promise(function (resolve, reject) {
+      fs.readFile("./data.ele", function (err, data) {
+        if (err) {
+          this.isLoading = false;
+          reject(err);
+        }
         resolve(data);
       });
-    }).then(async (data) => {
-      let loadData = await decompress(data.toString());
-      this.booksData = JSON.parse(loadData);
-      this.isLoading = false;
-    });
+    }).then(
+      async (data) => {
+        let loadData = await decompress(data.toString());
+        this.booksData = JSON.parse(loadData);
+        this.isLoading = false;
+      },
+      () => {
+        this.isLoading = false;
+      }
+    );
   },
   components: { BooksList },
 };
@@ -161,7 +190,7 @@ export default {
 .load-item {
   margin-top: 30%;
 }
-.creator-btn{
-  margin-left:30px;
+.creator-btn {
+  margin-left: 30px;
 }
 </style>
