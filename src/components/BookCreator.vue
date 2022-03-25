@@ -13,7 +13,7 @@
     <div id="panel">
       <div id="holder">
         <a-tooltip>
-          <template slot="title"> 导入漫画图片，请一定要事先排好顺序</template>
+          <template slot="title"> 导入漫画图片，注意排好顺序</template>
           <a-button icon="upload" @click="inputImagesBtn">导入图片</a-button>
         </a-tooltip>
 
@@ -31,17 +31,6 @@
           <a-button type="danger" @click="clearAll">清空</a-button>
         </a-tooltip>
 
-        <a-tooltip>
-          <template slot="title"
-            >标记每话的第一张图，比如在文件名后添加“_C”，epub会在标记处自动分章，默认（留空）每一页就是一章。</template
-          >
-          <a-input
-            id="regx"
-            placeholder="输入你设置的标记"
-            size="middle"
-            v-model="firstPage"
-          />
-        </a-tooltip>
         <div id="comic-previe">
           <div
             class="image-box"
@@ -66,47 +55,119 @@
           />
         </div>
         <div id="meta">
-          <a-tooltip>
-            <template slot="title">书名 必填</template>
-            <a-input placeholder="书名" v-model="metadata.title" />
-          </a-tooltip>
+          <a-tabs default-active-key="1">
+            <a-tab-pane key="1" tab="元数据">
+              <table>
+                <tr>
+                  <td>书名：</td>
+                  <td>
+                    <a-input placeholder="书名" v-model="metadata.title" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>作者：</td>
+                  <td>
+                    <a-input placeholder="作者" v-model="metadata.author" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>制作者：</td>
+                  <td>
+                    <a-input placeholder="制作者" v-model="metadata.maker" />
+                  </td>
+                </tr>
+              </table>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="更多元数据" force-render>
+              <table>
+                <tr>
+                  <td>集/卷：</td>
+                  <td>
+                    <a-input placeholder="集/卷" v-model="metadata.sequence" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>出版商：</td>
+                  <td>
+                    <a-input
+                      placeholder="出版商"
+                      v-model="metadata.publisher"
+                    />
+                  </td>
+                </tr>
 
-          <a-tooltip>
-            <template slot="title"> 作者，必填</template>
-            <a-input placeholder="作者" v-model="metadata.author" />
-          </a-tooltip>
+                <tr>
+                  <td>出版日期：</td>
+                  <td>
+                    <a-input
+                      placeholder="出版日期"
+                      v-model="metadata.published"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>简介：</td>
+                  <td>
+                    <a-textarea
+                      v-model="metadata.description"
+                      placeholder="内容简介"
+                      :auto-size="{ minRows: 3, maxRows: 5 }"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="自动分章" force-render>
+              <a-radio-group v-model="chapterMode">
+                <a-radio :value="1"> 默认 </a-radio>
+                <a-radio :value="2"> 按标记分章 </a-radio>
+              </a-radio-group>
+              <div v-show="chapterMode === 1">
+                <a-card title="" :bordered="false" style="width: 300px">
+                  <p>每一张图片就是一章</p>
+                </a-card>
+              </div>
+              <div v-show="chapterMode === 2">
+                <a-card title="" :bordered="false" style="width: 300px">
+                  <div>
+                    请给每话第一张图片的文件名添加标记，例如“_C”：xxx_C.jpg，epub会自动匹配标记进行分章。
+                  </div>
+                </a-card>
 
-          <a-tooltip>
-            <template slot="title"> EPUB文档制作者</template>
-            <a-input placeholder="制作者" v-model="metadata.maker" />
-          </a-tooltip>
-
-          <a-tooltip>
-            <template slot="title"> 集/卷，可以留空</template>
-            <a-input placeholder="集/卷" v-model="metadata.sequence" />
-          </a-tooltip>
-
-          <a-tooltip>
-            <template slot="title"> 出版商，可以留空</template>
-            <a-input placeholder="出版商" v-model="metadata.publisher" />
-          </a-tooltip>
-
-          <a-tooltip>
-            <template slot="title"> 出版日期，可以留空</template>
-            <a-input placeholder="出版日期" v-model="metadata.published" />
-          </a-tooltip>
+                <table>
+                  <tr>
+                    <td>标记：</td>
+                    <td>
+                      <a-input
+                        id="regx"
+                        placeholder="输入你设置的标记"
+                        size="default"
+                        v-model="firstPage"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>开始章节：</td>
+                    <td>
+                      <a-tooltip>
+                        <template slot="title"> 这本书从第几话开始</template>
+                        <a-input-number
+                          placeholder="开始章节"
+                          :min="0"
+                          v-model="firstChapter"
+                        />
+                      </a-tooltip>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </a-tab-pane>
+          </a-tabs>
         </div>
 
-        <a-tooltip>
-          <template slot="title"> 这本书开始于第几话</template>
-          <a-input-number
-            placeholder="开始章节"
-            :min="0"
-            v-model="firstChapter"
-          />
-        </a-tooltip>
-
-        <a-button type="primary" @click="showModal"> 生成epub </a-button>
+        <a-button style="width: 150px" type="primary" @click="showModal">
+          生成epub
+        </a-button>
         <a-modal
           title="提示"
           :visible="visible"
@@ -134,7 +195,7 @@ export default {
         img: "",
         path: "",
       },
-      returnRouter:'/',
+      returnRouter: "/",
       visible: false,
       confirmLoading: false,
       comicPreview: [],
@@ -142,12 +203,14 @@ export default {
       ModalText: "",
       isCreating: false,
       firstPage: "",
+      chapterMode: 1,
       metadata: {
         id: "",
         cover: "",
         title: "", //书名
         sequence: "", //丛书序号
         author: "", //作者
+        description: "", //简介
         maker: "",
         publisher: "", //出版商
         published: "", //出版日期
@@ -159,7 +222,7 @@ export default {
       },
     };
   },
-  mounted(){
+  mounted() {
     this.returnRouter = this.$route.params.rt;
   },
   methods: {
@@ -227,7 +290,7 @@ export default {
         this.metadata.images.forEach((item, i) => {
           let regM = new RegExp(this.firstPage);
           let fileName = this.getFileName(item);
-          if (!(this.firstPage === "")) { 
+          if (this.chapterMode === 1 || !(this.firstPage === "")) {
             if (regM.test(fileName)) {
               epub.addSection(
                 `第${count}话`,
@@ -277,9 +340,9 @@ export default {
       }
       this.isCreating = false;
       this.$notification.open({
-        message: '已完成',
-        description:`生成的文件放在根目录EPUB文件夹内`,
-        icon: <a-icon type="message" style="color: #108ee9" />,       
+        message: "已完成",
+        description: `生成的文件放在根目录EPUB文件夹内`,
+        icon: <a-icon type="message" style="color: #108ee9" />,
       });
     },
     createEPuB() {
@@ -382,13 +445,21 @@ export default {
   max-width: 1080px;
 }
 
+#meta {
+  height: 280px;
+}
+
 #meta input {
   display: block;
 }
 
+#meta tr td {
+  padding: 5px 0;
+}
+
 #preview {
   width: 150px;
-  height: 250px;
+  height: 230px;
   background-color: #fff;
   border-radius: 15px;
   overflow: hidden;

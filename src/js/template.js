@@ -11,7 +11,9 @@ let msgTemplate = `       <br/>
   </div>
 
   <div class="option">
-    <p style="text-indent:-4em;duokan-text-indent:-4em;padding-left:4em">声　明：本epub文档由软件自动生成，仅供测试，禁止传播和商用！</p>
+    <p style="text-indent:-4em;duokan-text-indent:-4em;padding-left:4em">声　明：此EPUB文档由软件自动生成，仅供测试，禁止传播和商用。</p>
+
+    <p style="text-indent:-4em;duokan-text-indent:-4em;padding-left:4em">软　件：https://gitee.com/taiyuuki/elepub/</p>
 
     <p style="text-indent:-4em;duokan-text-indent:-4em;padding-left:4em">阅读器：请使用<a href="http://www.duokan.com/product"><span style="color:#fff">多看阅读</span></a>，并将翻页模式设置为“上下翻页”。</p>
 
