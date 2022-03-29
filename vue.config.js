@@ -30,10 +30,18 @@ module.exports = {
       //设置应用图片
       builderOptions: {
         win: {
-          icon: './src/assets/logo.png'
+          icon: './src/assets/logo.png',
+          target:[
+            "nsis",
+            "zip"
+          ]
         },
         mac: {
           icon: './src/assets/logo.png'
+        },
+        nsis:{
+          "oneClick": false,
+          "allowToChangeInstallationDirectory": true
         },
         //设置App名称
         productName: 'elepub'

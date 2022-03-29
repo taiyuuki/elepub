@@ -3,6 +3,7 @@ node_modules
 EPUB
 /dist
 *.ele
+.epub
 
 
 # local env files

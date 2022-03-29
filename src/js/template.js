@@ -3,7 +3,7 @@ let msgTemplate = `       <br/>
   <h1 class="meg">说明</h1>
 
   <div class="book">
-    <p>书　名：[[TITLE]] </p>
+    <p>书　名：[[TITLE]] [[SEQUENCE]]</p>
 
     <p>图　文：[[AUTHOR]]</p>
 
@@ -13,7 +13,7 @@ let msgTemplate = `       <br/>
   <div class="option">
     <p style="text-indent:-4em;duokan-text-indent:-4em;padding-left:4em">声　明：此EPUB文档由软件自动生成，仅供测试，禁止传播和商用。</p>
 
-    <p style="text-indent:-4em;duokan-text-indent:-4em;padding-left:4em">软　件：https://gitee.com/taiyuuki/elepub/</p>
+    <p style="text-indent:-4em;duokan-text-indent:-4em;padding-left:4em">软　件：<a href="https://gitee.com/taiyuuki/elepub/"><span style="color:#fff">https://gitee.com/taiyuuki/elepub/</span></a></p>
 
     <p style="text-indent:-4em;duokan-text-indent:-4em;padding-left:4em">阅读器：请使用<a href="http://www.duokan.com/product"><span style="color:#fff">多看阅读</span></a>，并将翻页模式设置为“上下翻页”。</p>
 

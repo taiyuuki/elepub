@@ -3,15 +3,15 @@
     <div class="spin-content" v-if="isCreating">
       <a-spin class="load-item" tip="正在生成..."> </a-spin>
     </div>
-    <a-button
-      class="return-back"
-      type="primary"
-      @click="$router.push(returnRouter)"
-      icon="left-circle"
-      >返回</a-button
-    >
     <div id="panel">
       <div id="holder">
+        <a-button
+          class="return-back"
+          type="primary"
+          @click="$router.push(returnRouter)"
+          icon="left-circle"
+          >返回</a-button
+        >
         <a-tooltip>
           <template slot="title"> 导入漫画图片，注意排好顺序</template>
           <a-button icon="upload" @click="inputImagesBtn">导入图片</a-button>
@@ -40,12 +40,14 @@
             <img :src="item" />
             <p id="page-number">{{ ++i }}</p>
           </div>
+          <a-empty style="margin-top: 40%" v-if="comicPreview.length === 0" />
         </div>
       </div>
       <div id="message">
         <div id="cover">
-          <div id="preview" v-html="coverPreview.src"></div>
-          <a-button icon="upload" @click="slCoverBtn">选择封面</a-button>
+          <a-button icon="upload" @click="slCoverBtn" id="select-cover-btn"
+            >选择封面</a-button
+          >
           <input
             type="file"
             style="display: none"
@@ -53,6 +55,7 @@
             accept="image/*"
             @change="selectCover"
           />
+          <div id="preview" v-html="coverPreview.src"></div>
         </div>
         <div id="meta">
           <a-tabs default-active-key="1">
@@ -121,6 +124,7 @@
               <a-radio-group v-model="chapterMode">
                 <a-radio :value="1"> 默认 </a-radio>
                 <a-radio :value="2"> 按标记分章 </a-radio>
+                <a-radio :value="3"> 按页数分章 </a-radio>
               </a-radio-group>
               <div v-show="chapterMode === 1">
                 <a-card title="" :bordered="false" style="width: 300px">
@@ -161,6 +165,23 @@
                   </tr>
                 </table>
               </div>
+              <div v-show="chapterMode === 3">
+                <a-card title="" :bordered="false" style="width: 300px">
+                  <div>按固定页数进行分章</div>
+                </a-card>
+                <table>
+                  <tr>
+                    <td>设置页数：</td>
+                    <td>
+                      <a-input-number
+                        placeholder="页数"
+                        :min="2"
+                        v-model="pageCount"
+                      />
+                    </td>
+                  </tr>
+                </table>
+              </div>
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -192,7 +213,7 @@ export default {
   data() {
     return {
       coverPreview: {
-        img: "",
+        src: "",
         path: "",
       },
       returnRouter: "/",
@@ -200,6 +221,7 @@ export default {
       confirmLoading: false,
       comicPreview: [],
       firstChapter: 1,
+      pageCount: 10,
       ModalText: "",
       isCreating: false,
       firstPage: "",
@@ -287,10 +309,16 @@ export default {
     getHtmlSection() {
       return new Promise((resolve) => {
         let count = this.firstChapter;
+        let mode_1 =
+          this.chapterMode === 1 ||
+          (this.chapterMode === 3 && this.pageCount === 1) ||
+          (this.chapterMode ===2 && this.firstPage === "");
+        let mode_2 = this.chapterMode ===2 && this.firstPage !=="";
+        let mode_3 = this.chapterMode === 3 && this.pageCount !==1;
         this.metadata.images.forEach((item, i) => {
           let regM = new RegExp(this.firstPage);
           let fileName = this.getFileName(item);
-          if (this.chapterMode === 1 || !(this.firstPage === "")) {
+          if (mode_2) {
             if (regM.test(fileName)) {
               epub.addSection(
                 `第${count}话`,
@@ -309,7 +337,29 @@ export default {
                 `P${i + 1}`
               );
             }
-          } else {
+          } else if (mode_3) {
+            if (i % this.pageCount === 0) {
+              let alt = `P${i + 1}-P${i + this.pageCount}`;
+              if (i + this.pageCount >= this.metadata.images.length) {
+                alt = `P${i + 1}-P${this.metadata.images.length}`;
+              }
+              epub.addSection(
+                alt,
+                `<img alt='${fileName}' src='../images/${fileName}'/>`,
+                false,
+                false,
+                `P${i + 1}`
+              );
+            } else {
+              epub.addSection(
+                `P${i + 1}`,
+                `<img alt='${fileName}' src='../images/${fileName}'/>`,
+                true,
+                false,
+                `P${i + 1}`
+              );
+            }
+          } else if (mode_1) {
             epub.addSection(
               `P${i + 1}`,
               `<img alt='${fileName}' src='../images/${fileName}'/>`,
@@ -375,7 +425,7 @@ export default {
 
 <style>
 .return-back {
-  margin: 0 30px 30px 3px;
+  display: inline;
 }
 .creator {
   padding: 20px;
@@ -438,6 +488,29 @@ export default {
   height: 20px;
 }
 
+#cover {
+  position: relative;
+}
+
+#preview {
+  position: relative;
+  top: 40px;
+  left: 0px;
+  width: 150px;
+  height: 230px;
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 10px;
+  box-shadow: 1px 1px 3px #000;
+}
+
+#select-cover-btn {
+  position: absolute;
+  left: 30px;
+  top: 0px;
+}
+
 #message {
   display: grid;
   grid-template-rows: auto;
@@ -457,15 +530,6 @@ export default {
   padding: 5px 0;
 }
 
-#preview {
-  width: 150px;
-  height: 230px;
-  background-color: #fff;
-  border-radius: 15px;
-  overflow: hidden;
-  margin: 10px;
-  box-shadow: 1px 1px 3px #000;
-}
 .spin-content {
   text-align: center;
   border: 1px solid #91d5ff;

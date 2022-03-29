@@ -4,12 +4,12 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [{
-    path: '/',
+    path: '/mainPage',
     name: 'main-page',
     component: require('@/components/MainPage').default
   },
   {
-    path: '/books',
+    path: '/',
     name: 'read-books',
     component: require('@/components/ReadBooks').default
   },

@@ -1,12 +1,12 @@
 <template>
   <div class="books">
-    <a-button
+    <!-- <a-button
       class="return-back"
       type="primary"
       @click="$router.push('/')"
       icon="left-circle"
       >返回</a-button
-    >
+    > -->
     <a-tooltip>
       <template slot="title">
         只支持由本工具生成的漫画，用于测试生成效果，导入其他EPUB会发生错误。</template
@@ -73,7 +73,7 @@ export default {
       this.$router.push({
         name: "bookCreator",
         params: {
-          rt: "/books",
+          rt: "/",
         },
       });
     },
