@@ -1,82 +1,73 @@
 {
   "name": "elepub",
-  "version": "1.0.5",
+  "version": "2.0.0",
+  "description": "多看漫画生成器",
+  "productName": "elepub",
+  "author": "taiyuuki <taiyuuki@qq.com>",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "dev:electron": "quasar dev -m electron",
+    "build:electron": "quasar build -m electron"
   },
-  "main": "background.js",
-  "author": "taiyuuki",
-  "description": "一个用于制作多看滚动漫画（条漫）的工具",
   "dependencies": {
-    "ant-design-vue": "^1.7.8",
-    "axios": "^0.26.1",
-    "babel-eslint": "^10.1.0",
-    "core-js": "^3.8.3",
+    "@quasar/extras": "^1.0.0",
+    "@types/epub": "^0.0.7",
+    "archiver": "^5.2.0",
+    "cheerio": "^1.0.0-rc.10",
+    "core-js": "^3.6.5",
     "epub": "^1.2.1",
-    "epubjs": "^0.3.93",
-    "nodepub": "^3.0.8",
+    "moment": "^2.29.3",
+    "pinia": "^2.0.11",
+    "quasar": "^2.6.0",
     "shrink-string": "^3.0.9",
-    "vue": "^2.6.14",
-    "vue-router": "^3.5.1",
-    "vuex": "^3.6.2"
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-plugin-vuex": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "@vue/eslint-config-standard": "^6.1.0",
-    "electron": "^13.0.0",
-    "electron-devtools-installer": "^3.1.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "stylus": "^0.55.0",
-    "stylus-loader": "^6.1.0",
-    "vue-cli-plugin-electron-builder": "~2.1.1",
-    "vue-template-compiler": "^2.6.14"
+    "@quasar/app-webpack": "^3.0.0",
+    "@types/archiver": "^5.3.1",
+    "@types/node": "^12.20.21",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "electron": "^18.2.0",
+    "electron-builder": "^22.14.13",
+    "electron-packager": "^15.5.1",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^8.5.0",
+    "prettier": "^2.5.1"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/standard"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {}
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "engines": {
+    "node": ">= 12.22.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
   },
   "win": {
     "icon": "./src/assets/logo.png",
     "target": [
-      "nsis",
-      "zip"
+      "nsis"
     ]
   },
   "nsis": {
     "oneClick": false,
     "allowToChangeInstallationDirectory": true
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
-  "keywords": ["epub", "ebook", "comic", "epub-creater", "manga"]
+  "keywords": [
+    "epub",
+    "ebook",
+    "comic",
+    "epub-creater",
+    "manga"
+  ]
 }

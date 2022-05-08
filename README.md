@@ -1,27 +1,29 @@
 # elepub
 
-一个用于一键生成多看滚动式漫画（EPUB格式）的小工具，传统页漫不推荐使用（虽然也能用，但阅读体验不会好）。
+可以将漫画图片打包成epub，适配多看阅读（滚动翻页），推荐用于条漫，页漫虽然也能用，但如果存在跨页，阅读体验不会好。
 
-## 说明
+## v2.0.0
 
-功能是基于[nodepub](https://github.com/kcartlidge/nodepub)，界面是基于electron，所以叫elepub，项目使用vue-cli构建。
+* v2.0.0基于electron目前最新版（v18.2.0），使用quasar-cli构建，不再依赖Nodepub，功能基本不变，只是调整了界面。
 
-由于对nodepub的源代码进行了少量更改，自动下载的依赖包需要手动将其覆盖才能生成多看能用的epub。
+* [Releases](https://github.com/taiyuuki/elepub/releases)只含Windows版本，Mac理论上也能用，需要可以自行下载打包，但文件相关的个别功能可能用不了。
+* [Web版](https://taiyuuki.github.io/elepub-web-build/)
 
-## 功能说明
+## 阅读功能
 
-* 只需要导入图片，输入必要的信息，就能一键生成适配于多看阅读（目前版本6.6.0.20）的滚动式漫画（建议用于条漫）。
+* 附带阅读功能，可以用来测试生成效果，**但仅限于elepub生成的EPUB**。
 
-* 支持浏览EPUB漫画，可以用来测试生成效果，但仅限于elepub生成的EPUB，导入其他EPUB会发生各种错误。
+## Install the dependencies
+```bash
+npm i
+```
 
-* elepub只是为了给喜欢用多看阅读看条漫的人一个便利，生成的EPUB文档请务必仅自己使用，禁止用于商业用途，如果发生版权等纠纷，后果自负。
+### Start in development mode
+```bash
+npm run dev:electron
+```
 
-## 自动分章
-
-支持自动分章，但需要给漫画每一话第一张图片的文件名添加一个特有而统一的匹配标记（或者叫占位符），例如“_C”：xxx_C.jpg，然后在制作页面输入该标记（支持正则表达式），生成的epub就会根据标记自动分章，分章标题为第1话-第xxx话（可以自己设置从第几话开始）。如果不填写匹配标记，则默认将每一页都设为一章，如果输入的标记无法匹配到任何图片，则不分章。
-
-## 吐槽
-
-其实想要一键生成符合特定条件的epub，使用python是最合适的，python也有不少现成的类库，sigil里的插件也是python。
-
-但无奈我python水平有限，考虑到我js玩得更溜，于是在node.js上找到了Nodepub这个模块，测试了一下还挺好用，于是就有了这个小工具……说是“小工具”，但electron就相当于一个集成了node.js环境的Chrome浏览器，相比其他桌面端技术，一个显著的的缺点就是包体积较大……
+### Build for production
+```bash
+npm run build:electron
+```
