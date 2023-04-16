@@ -1,0 +1,85 @@
+{
+  "name": "elepub",
+  "version": "2.0.4",
+  "description": "duokan manga creator",
+  "productName": "elepub",
+  "author": "taiyuuki <taiyuuki@qq.com>",
+  "private": true,
+  "keywords": [
+    "epub",
+    "epub manga",
+    "epub creator",
+    "epub comic",
+    "quasar",
+    "vue3"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "dev:electron": "quasar dev -m electron",
+    "build:electron": "quasar build -m electron",
+    "dev:pwa": "quasar dev -m pwa",
+    "build:pwa": "quasar build -m pwa",
+    "test": "vitest"
+  },
+  "win": {
+    "icon": "./src/assets/logo.png",
+    "target": [
+      "nsis"
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "pinia": "^2.0.11",
+    "quasar": "^2.10.1",
+    "vue": "^3.2.41",
+    "vue-router": "^4.0.0",
+    "wepub": "^1.0.10"
+  },
+  "devDependencies": {
+    "@iconify-json/bi": "^1.1.8",
+    "@iconify-json/flat-color-icons": "^1.1.2",
+    "@iconify-json/ic": "^1.1.9",
+    "@quasar/app-vite": "^1.0.0",
+    "@taiyuuki/eslint-config-vue-unimport": "^0.0.5",
+    "@types/node": "^12.20.21",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "@unocss/preset-attributify": "^0.45.22",
+    "@unocss/preset-icons": "^0.45.22",
+    "@unocss/preset-uno": "^0.45.22",
+    "autoprefixer": "^10.4.2",
+    "electron": "^20.1.4",
+    "electron-builder": "^23.6.0",
+    "electron-packager": "^15.5.2",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "postcss": "^8.4.18",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.4",
+    "unocss": "^0.45.22",
+    "unplugin-auto-import": "^0.11.2",
+    "unplugin-vue-components": "^0.22.9",
+    "vite": "^3.2.2",
+    "vitest": "^0.23.4",
+    "workbox-build": "^6.5.4",
+    "workbox-cacheable-response": "^6.5.4",
+    "workbox-core": "^6.5.4",
+    "workbox-expiration": "^6.5.4",
+    "workbox-precaching": "^6.5.4",
+    "workbox-routing": "^6.5.4",
+    "workbox-strategies": "^6.5.4"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

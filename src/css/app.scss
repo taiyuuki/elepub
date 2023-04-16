@@ -1,0 +1,45 @@
+// app global css in SCSS form
+:root {
+  --primary: #1976d2;
+  --secondary: #ef3473;
+  --font-color: #000;
+}
+.alert-dialog {
+  background-color: #fff;
+  color: var(--secondary);
+  .q-dialog__title {
+    background-color: var(--secondary);
+    color: #fff;
+    padding: 0 10px;
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+  .q-dialog__message {
+    padding: 0 16px;
+  }
+  .q-card__actions {
+    span {
+      color: var(--secondary);
+    }
+  }
+}
+
+html {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: var(--primary) !important;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+
+  // scroll-behavior: smooth;
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: transparent !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--primary) !important;
+    border-radius: 4px;
+  }
+}
