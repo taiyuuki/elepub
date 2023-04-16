@@ -1,0 +1,58 @@
+:root {
+  --primary: #1976d2;
+  --secondary: #ef3473;
+  --font-color: #000;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.alert-dialog {
+  background-color: #fff;
+  color: var(--secondary);
+  .q-dialog__title {
+    background-color: var(--secondary);
+    color: #fff;
+    padding: 0 10px;
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+  .q-dialog__message {
+    padding: 0 16px;
+  }
+  .q-card__actions {
+    span {
+      color: var(--secondary);
+    }
+  }
+}
+
+html {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: var(--primary) !important;
+  scrollbar-width: thin;
+
+  // scroll-behavior: smooth;
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: transparent !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--primary) !important;
+    border-radius: 4px;
+  }
+}
+
+body {
+  box-sizing: border-box;
+  width: 100vw !important;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+:root body {
+  position: absolute !important;
+}
