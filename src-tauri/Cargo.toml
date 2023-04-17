@@ -1,6 +1,6 @@
 [package]
 name = "elepub"
-version = "3.0.1"
+version = "3.0.2"
 description = "多看漫画生成器"
 authors = ["Taiyuuki"]
 license = "MIT"

@@ -89,7 +89,7 @@
 import { useMeta, volume } from 'src/composables/use-meta'
 import { useCover, useImages, useContents, setContents, clearContents } from 'src/composables/use-images'
 import { importing, generating, payload } from 'src/composables/use-loading'
-import { isEmptyString, isNotEmptyString, isVoid, strRandom } from '@taiyuuki/utils'
+import { dateNow, isEmptyString, isNotEmptyString, isVoid, strRandom } from '@taiyuuki/utils'
 import { alertDilog, alertNotify } from 'src/utils/notify'
 import { getFileExt, getFileName, getMinetype } from 'src/utils'
 import { invoke, convertFileSrc } from '@tauri-apps/api/tauri'
@@ -192,6 +192,7 @@ const build = async () => {
       mime,
     })
   })
+  meta.date = dateNow('yyyy-MM-dd')
   const time = Date.now()
   generating.value = true
   meta.output = `${output.value}\\${meta.title}`
