@@ -13,7 +13,7 @@
 
 ## 下载和使用
 
-- [Windows版下载](./releases) 
+- [Windows版下载](../../releases) 
 - Mac版请下载源码自行打包，由于我并没有对其进行配置，如果打包失败，请参考Tauri的[文档](https://tauri.app/v1/guides/building/macos)。
 - [在线版](https://taiyuuki.github.io/elepub-web-build/) 
   在线版的生产速度会慢很多，且最大支持2GB的文档。如果图片较多、较大，建议使用Windows版。
@@ -28,9 +28,9 @@
 
 * `3.0.0`使用`Tauri`重构了整个项目，界面基本维持原样，但得益于`Tauri`使用`Rust`的优势，大幅提高了EPUB的生产速度（提速90%以上），大幅减少软件包大小(68MB→2.8MB)，软件安装后占用也更小（150MB→6MB）。
 
-如果遇到问题，欢迎提[issue](./issues)，我会尽快修复。
+如果遇到问题，欢迎提[issue](../../issues)，我会尽快修复。
 
-Web + electron的版本理论上不再更新，但代码保留在本仓库[electron](./tree/electron)分支。
+Web + electron的版本理论上不再更新，但代码保留在本仓库[electron](../../tree/electron)分支。
 
 ## 项目运行
 
