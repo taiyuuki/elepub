@@ -123,6 +123,7 @@ const build = async () => {
         message: `完成，耗时${cost.toFixed(0)}秒`,
         type: 'positive',
         icon: mdiCheckCircleOutline,
+        position: 'top',
     })
     payload.value = 0
 }
@@ -134,6 +135,7 @@ const beforeBuild = () => {
                 message: '请添加图片',
                 type: 'negative',
                 icon: mdiAlertOutline,
+                position: 'top',
             })
             return
         }
