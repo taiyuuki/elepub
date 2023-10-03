@@ -1,3 +1,7 @@
 /dist
+/src-capacitor
+/src-cordova
+/.quasar
 /node_modules
-/src-tauri
+.eslintrc.js
+/src-ssr

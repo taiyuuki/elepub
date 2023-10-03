@@ -11,6 +11,8 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ImagePreview: typeof import('./components/ImagePreview.vue')['default']
     MainHeader: typeof import('./components/MainHeader.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
     SetMeta: typeof import('./components/SetMeta.vue')['default']
   }
 }

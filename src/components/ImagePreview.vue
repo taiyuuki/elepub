@@ -1,3 +1,113 @@
+<script lang="ts">
+export default { name: 'preview-content' }
+</script>
+
+<script lang="ts" setup>
+import { importing } from 'src/composables/use-loading'
+import { useImages, useCover, useContents, removeContentsItem, clearContents, setContents, triggerSetContents } from 'src/composables/use-images'
+import { is_empty_string, is_not_empty_string } from '@taiyuuki/utils'
+import { ensureNoExt } from 'src/utils'
+
+const images = useImages()
+const cover = useCover()
+const contents = useContents()
+
+const hasContents = computed(() => {
+    return !is_empty_string(contents)
+})
+const thumbStyle = {
+    right: '4px',
+    borderRadius: '5px',
+    backgroundColor: '#027be3',
+    width: '5px',
+    opacity: '0.75',
+}
+
+const imagesCount = computed(() => {
+    return images.length
+})
+
+// 添加至目录
+const addToContents = (i: number, name: string) => {
+    contents[i] = ensureNoExt(name)
+}
+
+// 删除图片
+const removeImage = (i: number) => {
+    images.splice(i, 1)
+    triggerSetContents()
+}
+
+// 设置封面
+const setCover = (i: number) => {
+    cover.value = JSON.parse(JSON.stringify(toRaw(images[i])))
+}
+
+// 锚点跳转
+function goAnchor(selector: string) {
+    const target = document.querySelector(selector) as HTMLElement
+    if (target) {
+        const outArea = target.parentNode?.parentNode as HTMLElement
+        if (outArea) {
+            const top = target.offsetTop
+            outArea.scrollTop = top
+        }
+    }
+}
+
+// 编辑目录
+function editTitle(e: Event, i: string | number) {
+    const target = e.target as HTMLElement
+    // 不允许换行
+    if ((<InputEvent>e).inputType === 'insertParagraph') {
+        target.innerText = contents[i]
+        return
+    }
+    if (target.innerText.length <= 30) {
+        contents[i] = target.innerText
+    }
+    else {
+        return
+    }
+}
+
+// 如果目录标题为空
+function initTitle(e: Event, i: string | number) {
+    const target = e.target as HTMLElement
+    if (target.innerText.trim() === '') {
+        contents[i] = `P${Number(i) + 1}`
+    }
+}
+
+// 导入目录
+function importContents(e: Event) {
+    const inputEl = e.target as HTMLInputElement
+    const files = inputEl.files as FileList
+    if (files[0]) {
+        const reader = new FileReader()
+        reader.readAsText(files[0])
+        reader.addEventListener('load', (re) => {
+            const target = re.target as FileReader
+            if (target) {
+                const text = target.result as string
+                const inputContents = text.split('\n').filter(item => is_not_empty_string(item, true))
+                const len = Object.keys(contents).length
+                let index = 0
+                for (const i in contents) {
+                    if (index < len && index < inputContents.length) {
+                        contents[i] = inputContents[index++]
+                    }
+                    else {
+                        break
+                    }
+                }
+            }
+            inputEl.value = ''
+        })
+    }
+}
+</script>
+
 <template>
   <div
     flex="row items-start"
@@ -329,116 +439,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-export default { name: 'preview-content' }
-</script>
-
-<script lang="ts" setup>
-import { importing } from 'src/composables/use-loading'
-import { useImages, useCover, useContents, removeContentsItem, clearContents, setContents, triggerSetContents } from 'src/composables/use-images'
-import { isEmptyObj, isNotEmptyString } from '@taiyuuki/utils'
-import { ensureNoExt } from 'src/utils'
-
-const images = useImages()
-const cover = useCover()
-const contents = useContents()
-
-const hasContents = computed(() => {
-  return !isEmptyObj(contents)
-})
-const thumbStyle = {
-  right: '4px',
-  borderRadius: '5px',
-  backgroundColor: '#027be3',
-  width: '5px',
-  opacity: '0.75',
-}
-
-const imagesCount = computed(() => {
-  return images.length
-})
-
-// 添加至目录
-const addToContents = (i: number, name: string) => {
-  contents[i] = ensureNoExt(name)
-}
-
-// 删除图片
-const removeImage = (i: number) => {
-  images.splice(i, 1)
-  triggerSetContents()
-}
-
-// 设置封面
-const setCover = (i: number) => {
-  cover.value = JSON.parse(JSON.stringify(toRaw(images[i])))
-}
-
-// 锚点跳转
-function goAnchor(selector: string) {
-  const target = document.querySelector(selector) as HTMLElement
-  if (target) {
-    const outArea = target.parentNode?.parentNode as HTMLElement
-    if (outArea) {
-      const top = target.offsetTop
-      outArea.scrollTop = top
-    }
-  }
-}
-
-// 编辑目录
-function editTitle(e: Event, i: string | number) {
-  const target = e.target as HTMLElement
-  // 不允许换行
-  if ((<InputEvent>e).inputType === 'insertParagraph') {
-    target.innerText = contents[i]
-    return
-  }
-  if (target.innerText.length <= 30) {
-    contents[i] = target.innerText
-  }
-  else {
-    return
-  }
-}
-
-// 如果目录标题为空
-function initTitle(e: Event, i: string | number) {
-  const target = e.target as HTMLElement
-  if (target.innerText.trim() === '') {
-    contents[i] = `P${Number(i) + 1}`
-  }
-}
-
-// 导入目录
-function importContents(e: Event) {
-  const inputEl = e.target as HTMLInputElement
-  const files = inputEl.files as FileList
-  if (files[0]) {
-    const reader = new FileReader()
-    reader.readAsText(files[0])
-    reader.addEventListener('load', (re) => {
-      const target = re.target as FileReader
-      if (target) {
-        const text = target.result as string
-        const inputContents = text.split('\n').filter(item => isNotEmptyString(item, true))
-        const len = Object.keys(contents).length
-        let index = 0
-        for (const i in contents) {
-          if (index < len && index < inputContents.length) {
-            contents[i] = inputContents[index++]
-          }
-          else {
-            break
-          }
-        }
-      }
-      inputEl.value = ''
-    })
-  }
-}
-</script>
 
 <style lang="scss">
 .no-select {

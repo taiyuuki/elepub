@@ -1,3 +1,73 @@
+<script lang="ts">
+export default { name: 'set-meta' }
+</script>
+
+<script lang="ts" setup>
+import { useMeta, volume } from 'src/composables/use-meta'
+import { useCover, triggerSetContents } from 'src/composables/use-images'
+import { useOptions } from 'src/composables/use-options'
+import { is_void, str_uuid } from '@taiyuuki/utils'
+import { convertFileSrc } from '@tauri-apps/api/tauri'
+import { open } from '@tauri-apps/api/dialog'
+import { getFileName } from 'src/utils'
+import { effect } from 'vue'
+
+const tabs = ['basemeta', 'moremeta', 'options']
+const tab = ref('basemeta')
+const meta = useMeta()
+const cover = useCover()
+const {
+    confoundingImage,
+    confoundingXhtml,
+    pageCount,
+    firstChapter,
+    chapterMode,
+    firstPage,
+    output,
+} = useOptions()
+
+effect(() => {
+    firstPage.value
+    if (pageCount.value < 2) {
+        pageCount.value = 10
+    }
+    if (firstChapter.value < 0) {
+        firstChapter.value = 0
+    }
+    triggerSetContents()
+})
+
+function resetId() {
+    meta.id = `urn:uuid:${str_uuid()}`
+}
+
+async function selectCover() {
+    const coverPath = await open({
+        title: '请选择封面',
+        filters: [{
+            name: 'image',
+            extensions: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'tif', 'tiff'],
+        }],
+    }) as string
+    if (is_void(coverPath)) {
+        return
+    }
+    cover.value.url = convertFileSrc(coverPath)
+    cover.value.name = getFileName(coverPath)
+    cover.value.path = coverPath
+}
+
+async function selectDirectory() {
+    const outputPath = await open({ title: '选择保存路径', directory: true }) as string
+    if (is_void(outputPath)) {
+        return
+    }
+    output.value = outputPath
+}
+
+onMounted(resetId)
+</script>
+
 <template>
   <q-tabs
     v-model="tab"
@@ -208,76 +278,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-export default { name: 'set-meta' }
-</script>
-
-<script lang="ts" setup>
-import { useMeta, volume } from 'src/composables/use-meta'
-import { useCover, triggerSetContents } from 'src/composables/use-images'
-import { useOptions } from 'src/composables/use-options'
-import { isVoid, strUuid } from '@taiyuuki/utils'
-import { convertFileSrc } from '@tauri-apps/api/tauri'
-import { open } from '@tauri-apps/api/dialog'
-import { getFileName } from 'src/utils'
-import { effect } from 'vue'
-
-const tabs = ['basemeta', 'moremeta', 'options']
-const tab = ref('basemeta')
-const meta = useMeta()
-const cover = useCover()
-const {
-  confoundingImage,
-  confoundingXhtml,
-  pageCount,
-  firstChapter,
-  chapterMode,
-  firstPage,
-  output,
-} = useOptions()
-
-effect(() => {
-  firstPage.value
-  if (pageCount.value < 2) {
-    pageCount.value = 10
-  }
-  if (firstChapter.value < 0) {
-    firstChapter.value = 0
-  }
-  triggerSetContents()
-})
-
-function resetId() {
-  meta.id = `urn:uuid:${strUuid()}`
-}
-
-async function selectCover() {
-  const coverPath = await open({
-    title: '请选择封面',
-    filters: [{
-      name: 'image',
-      extensions: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'tif', 'tiff'],
-    }],
-  }) as string
-  if (isVoid(coverPath)) {
-    return
-  }
-  cover.value.url = convertFileSrc(coverPath)
-  cover.value.name = getFileName(coverPath)
-  cover.value.path = coverPath
-}
-
-async function selectDirectory() {
-  const outputPath = await open({ title: '选择保存路径', directory: true }) as string
-  if (isVoid(outputPath)) {
-    return
-  }
-  output.value = outputPath
-}
-
-onMounted(resetId)
-</script>
 
 <style lang="scss">
 .tab-active {

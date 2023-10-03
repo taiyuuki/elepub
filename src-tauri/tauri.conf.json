@@ -2,8 +2,8 @@
   "build": {
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist",
+    "devPath": "http://localhost:9100",
+    "distDir": "../dist/ssg",
     "withGlobalTauri": false
   },
   "package": {

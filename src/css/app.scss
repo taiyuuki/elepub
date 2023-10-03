@@ -1,3 +1,4 @@
+// app global css in SCSS form
 :root {
   --primary: #1976d2;
   --secondary: #ef3473;
@@ -6,9 +7,11 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
-.alert-dialog {
+
+.q-dialog-plugin {
   background-color: #fff;
   color: var(--secondary);
+
   .q-dialog__title {
     background-color: var(--secondary);
     color: #fff;
@@ -16,9 +19,11 @@
     margin-bottom: 16px;
     font-size: 16px;
   }
+
   .q-dialog__message {
     padding: 0 16px;
   }
+
   .q-card__actions {
     span {
       color: var(--secondary);

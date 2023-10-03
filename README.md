@@ -53,3 +53,12 @@ pnpm tauri dev
 ```bash
 pnpm tauri build
 ```
+### 打包报错
+
+打包时如果遇到以下错误：
+
+```bash
+[vite:resolve] Missing "./preload-helper" export in "vite" package
+```
+
+打开报错的文件（`\node_modules\vite\dist\node\chunks\dep-[hash].js`），找到`vite/preload-helper`，将其改为`\0vite/preload-helper`，然后重新打包即可。

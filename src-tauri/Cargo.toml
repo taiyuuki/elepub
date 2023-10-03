@@ -1,24 +1,32 @@
 [package]
-name = "elepub"
-version = "3.0.2"
-description = "多看漫画生成器"
-authors = ["Taiyuuki"]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = ["taiyuuki <taiyuuki@qq.com>"]
 license = "MIT"
-repository = ""
+repository = "https://github.com/taiyuuki/elepub"
+default-run = "app"
 edition = "2021"
+rust-version = "1.60"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.2", features = [] }
+tauri-build = { version = "1.5.0", features = [] }
 
 [dependencies]
-tauri = { version = "1.2", features = ["dialog-all", "fs-exists", "protocol-asset", "shell-open"] }
-serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-zip = "0.6.4"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.5.0", features = [
+    "fs-exists",
+    "dialog-all",
+    "shell-open",
+    "protocol-asset",
+] }
+zip = "0.6.6"
 
 [features]
-# this feature is used for production builds or when `devPath` points to the filesystem
+# this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.
+# If you use cargo directly instead of tauri's cli you can use this feature flag to switch between tauri's `dev` and `build` modes.
 # DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]

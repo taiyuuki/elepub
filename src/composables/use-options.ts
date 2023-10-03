@@ -1,19 +1,22 @@
-import { storageGet, storageSet } from '@taiyuuki/utils'
+import { storage_get, storage_set } from '@taiyuuki/utils'
 
-const confoundingImage = ref(false)
-const confoundingXhtml = ref(false)
-const chapterMode = ref('default')
-const firstChapter = ref(1)
-const pageCount = ref(10)
-const firstPage = ref('')
-const output = ref<string>(storageGet('output', ''))
+export const confoundingImage = ref(false)
+export const confoundingXhtml = ref(false)
+export const chapterMode = ref('default')
+export const firstChapter = ref(1)
+export const pageCount = ref(10)
+export const firstPage = ref('')
+export const output = ref('')
 
 export function useOptions() {
-  return {
-    confoundingImage, confoundingXhtml, chapterMode, firstChapter, pageCount, firstPage, output,
-  }
-}
+    onMounted(() => {
+        output.value = storage_get('output') || ''
+    })
 
-watch(output, (value) => {
-  storageSet('output', value)
-})
+    watch(output, (value) => {
+        storage_set('output', value)
+    })
+    return {
+        confoundingImage, confoundingXhtml, chapterMode, firstChapter, pageCount, firstPage, output,
+    }
+}

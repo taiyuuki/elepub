@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import { showDrawer } from 'src/composables/use-drawer'
+import { generating, progress } from 'src/composables/use-loading'
+</script>
+
 <template>
   <q-layout view="lHh Lpr lFf">
     <MainHeader />
@@ -40,8 +45,3 @@
     </div>
   </q-layout>
 </template>
-
-<script setup lang="ts">
-import { showDrawer } from 'src/composables/use-drawer'
-import { generating, progress } from 'src/composables/use-loading'
-</script>
